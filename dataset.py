@@ -2,13 +2,14 @@ import torch
 import csv
 import numpy as np
 import pandas as pd
+from data import dataset
 
 class KidneyDataset(torch.utils.data.Dataset):
 
     def __init__(self, csv_dir, label, features=None):
 
         content = self.read_csv(csv_dir)
-        # print("csv content: ", content)
+        print("csv content: ", content)
         # if features is None:
         #     features = list(content[0].keys())  # All columns except the label
         #     features.remove(label)
@@ -70,7 +71,7 @@ class KidneyDataset(torch.utils.data.Dataset):
 
 if __name__ == "__main__":
 
-    df = pd.read_csv('./data/kidney_data.csv')
+    df = pd.read_csv(dataset)
     data = KidneyDataset(
         csv_dir='./data/kidney_data.csv',
         label='DiseaseOutcome'  # replace with the actual column name representing the outcome in your dataset

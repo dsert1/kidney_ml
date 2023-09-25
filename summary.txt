@@ -1,0 +1,139 @@
+Model: MLPClassifier
+Accuracy       0.788764
+Precision      0.854914
+Recall         0.881429
+Specificity    0.447368
+F1             0.867710
+MCC            0.344524
+ROC_AUC        0.774812
+PR_AUC         0.917963
+dtype: float64
+Accuracy       0.025301
+Precision      0.018430
+Recall         0.025644
+Specificity    0.081776
+F1             0.016419
+MCC            0.080745
+ROC_AUC        0.034455
+PR_AUC         0.019506
+dtype: float64
+Average Confusion Matrix:
+[[ 8.5 10.5]
+ [ 8.3 61.7]]
+--------------------------------------------------
+Model: RandomForestClassifier
+Accuracy       0.867978
+Precision      0.874374
+Recall         0.972143
+Specificity    0.484211
+F1             0.920559
+MCC            0.565249
+ROC_AUC        0.916154
+PR_AUC         0.975535
+dtype: float64
+Accuracy       0.020845
+Precision      0.016283
+Recall         0.015246
+Specificity    0.075921
+F1             0.012305
+MCC            0.078374
+ROC_AUC        0.022095
+PR_AUC         0.006699
+dtype: float64
+Average Confusion Matrix:
+[[ 9.2   9.8 ]
+ [ 1.95 68.05]]
+--------------------------------------------------
+Model: XGBClassifier
+Accuracy       1.0
+Precision      1.0
+Recall         1.0
+Specificity    1.0
+F1             1.0
+MCC            1.0
+ROC_AUC        1.0
+PR_AUC         1.0
+dtype: float64
+Accuracy       0.0
+Precision      0.0
+Recall         0.0
+Specificity    0.0
+F1             0.0
+MCC            0.0
+ROC_AUC        0.0
+PR_AUC         0.0
+dtype: float64
+Average Confusion Matrix:
+[[19.  0.]
+ [ 0. 70.]]
+--------------------------------------------------
+Model: LinearDiscriminantAnalysis
+Accuracy       0.820225
+Precision      0.909091
+Recall         0.857143
+Specificity    0.684211
+F1             0.882353
+MCC            0.506723
+ROC_AUC        0.860902
+PR_AUC         0.933454
+dtype: float64
+Accuracy       4.463264e-16
+Precision      3.347448e-16
+Recall         1.115816e-16
+Specificity    2.231632e-16
+F1             0.000000e+00
+MCC            0.000000e+00
+ROC_AUC        2.231632e-16
+PR_AUC         1.115816e-16
+dtype: float64
+Average Confusion Matrix:
+[[13.  6.]
+ [10. 60.]]
+--------------------------------------------------
+Model: LogisticRegression
+Accuracy       0.831461
+Precision      0.848101
+Recall         0.957143
+Specificity    0.368421
+F1             0.899329
+MCC            0.422424
+ROC_AUC        0.829323
+PR_AUC         0.938231
+dtype: float64
+Accuracy       1.115816e-16
+Precision      1.115816e-16
+Recall         1.115816e-16
+Specificity    5.579081e-17
+F1             1.115816e-16
+MCC            1.115816e-16
+ROC_AUC        1.115816e-16
+PR_AUC         2.231632e-16
+dtype: float64
+Average Confusion Matrix:
+[[ 7. 12.]
+ [ 3. 67.]]
+--------------------------------------------------
+Model: SVC
+Accuracy       0.820225
+Precision      0.837500
+Recall         0.957143
+Specificity    0.315789
+F1             0.893333
+MCC            0.370949
+ROC_AUC        0.835338
+PR_AUC         0.942996
+dtype: float64
+Accuracy       4.463264e-16
+Precision      4.463264e-16
+Recall         1.115816e-16
+Specificity    0.000000e+00
+F1             3.347448e-16
+MCC            5.579081e-17
+ROC_AUC        2.231632e-16
+PR_AUC         3.347448e-16
+dtype: float64
+Average Confusion Matrix:
+[[ 6. 13.]
+ [ 3. 67.]]
+--------------------------------------------------
+Best Model: XGBClassifier with score 0.9925925925925926

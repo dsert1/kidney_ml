@@ -1,14 +1,66 @@
+# Imports
 import torch
 import torch.nn as nn
 import numpy as np
 import tqdm
+import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-import pandas as pd
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.metrics import matthews_corrcoef
+from sklearn.model_selection import GridSearchCV
 from utils import simple_accuracy
+from data import dataset
 
+# Constants
 __all__ = ['MLPClassifier']
+
+# Functions
+def l1_regularizer(model, lambda_l1=0.01):
+    ''' LASSO '''
+    lossl1 = 0
+    for model_param_name, model_param_value in model.named_parameters():
+        if model_param_name.endswith('weight'):
+            lossl1 += lambda_l1 * model_param_value.abs().sum()
+    return lossl1
+
+# Classes
+class HelperDataset(torch.utils.data.Dataset):
+    ''' Helper Dataset for PyTorch DataLoader '''
+    def __init__(self, x, y=None):
+        self.x, self.y = x, y
+
+    def __len__(self):
+        return len(self.x)
+
+    def __getitem__(self, idx):
+        return self.x[idx], self.y[idx]
+
+class MLP(nn.Module):
+    ''' Multi-Layer Perceptron Implementation '''
+    def __init__(self, in_dim, hidden_dims, out_dim):
+        super(MLP, self).__init__()
+
+        hidden_layers = []
+        hidden_dims = [n for n in hidden_dims]
+        hidden_dims.insert(0, in_dim)
+        for _in, _out in zip(hidden_dims, hidden_dims[1:]):
+            hidden_layers.append(nn.Linear(_in, _out))
+            hidden_layers.append(nn.ReLU())
+            hidden_layers.append(nn.Dropout(0.5))
+
+        self.layers = nn.Sequential(
+            nn.BatchNorm1d(in_dim),
+            *hidden_layers,
+            nn.Linear(hidden_dims[-1], out_dim),
+        )
+
+    def forward(self, x):
+        x = self.layers(x)
+        x = torch.sigmoid(x)
+        x = x.squeeze()
+        return x
 
 class MLPClassifier(BaseEstimator):
     ''' ... '''
@@ -91,6 +143,11 @@ class MLPClassifier(BaseEstimator):
         ''' ... '''
         proba = self.predict_proba(X)
         return (proba[:, 1] > proba[:, 0]).astype(np.int32)
+    
+    def score(self, X, y):
+      y_pred = self.predict(X)
+      return simple_accuracy(y, y_pred)
+
         
     def predict_proba(self, X):
         ''' ... '''
@@ -172,54 +229,14 @@ class MLPClassifier(BaseEstimator):
 
       return importances_dict
 
-class MLP(nn.Module):
-    def __init__(self, in_dim, hidden_dims, out_dim):
-        super(MLP, self).__init__()
 
-        hidden_layers = []
-        hidden_dims = [n for n in hidden_dims]
-        hidden_dims.insert(0, in_dim)
-        for _in, _out in zip(hidden_dims, hidden_dims[1:]):
-            hidden_layers.append(nn.Linear(_in, _out))
-            hidden_layers.append(nn.ReLU())
-            hidden_layers.append(nn.Dropout(0.5))  # Add dropout for regularization
+# Grid Search Example with LDA
+param_grid = {
+    'solver': ['svd', 'lsqr', 'eigen']
+}
+grid_search = GridSearchCV(LDA(), param_grid, scoring='accuracy', cv=5)
 
-        self.layers = nn.Sequential(
-            nn.BatchNorm1d(in_dim),
-            *hidden_layers,
-            nn.Linear(hidden_dims[-1], out_dim),
-        )
-
-    def forward(self, x):
-        x = self.layers(x)
-        x = torch.sigmoid(x)
-        x = x.squeeze()
-        return x
-
-class HelperDataset(torch.utils.data.Dataset):
-    ''' ... '''
-    def __init__(self, x, y = None):
-        ''' ... '''
-        self.x, self.y = x, y
-
-    def __len__(self):
-        ''' ... '''
-        return len(self.x)
-
-    def __getitem__(self, idx):
-        ''' ... '''
-        return self.x[idx], self.y[idx]
-
-def l1_regularizer(model, lambda_l1=0.01):
-    ''' LASSO '''
-    lossl1 = 0
-    for model_param_name, model_param_value in model.named_parameters():
-        if model_param_name.endswith('weight'):
-            lossl1 += lambda_l1 * model_param_value.abs().sum()
-    return lossl1
-
-
-
+# Main Function
 if __name__ == '__main__':
     ''' for testing purpose only '''
     # cls = MLPClassifier(hidden_dims=[32], num_epochs=64, verbose=True)
@@ -260,7 +277,7 @@ if __name__ == '__main__':
 
     # v2
 
-    df = pd.read_csv('./data/kidney_data_final_9.10.23.csv')
+    df = pd.read_csv(dataset)
     label_column = "GDvsTI"
     print("df: ", df)
     X = df.drop(label_column, axis=1).values
@@ -287,7 +304,4 @@ if __name__ == '__main__':
     plt.xlabel('Permutation Importance')
     plt.ylabel('Features')
     plt.show()
-
-
-
 
