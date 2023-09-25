@@ -1,0 +1,4 @@
+.DS_Store
+*/.DS_Store
+__pycache__/
+data/kidney_data_final_9.18.23.csv
